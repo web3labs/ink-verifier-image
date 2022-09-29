@@ -67,8 +67,7 @@ wasm-opt --version
 
 # 6. Setup toolchain
 
-echo "Info: RUSTC_WRAPPER=$RUSTC_WRAPPER"
-sccache -s
+echo "RUSTC_WRAPPER=$RUSTC_WRAPPER"
 
 rustup toolchain install "${rustc_version}"
 rustup target add wasm32-unknown-unknown --toolchain "${rustc_version}"
@@ -90,6 +89,8 @@ if [ $build_mode == "Release" ]; then
 fi
 
 BUILD_PARAMS="${BUILD_PARAMS} --optimization-passes ${optimization_passes}"
+
+echo "BUILD_PARAMS=$BUILD_PARAMS"
 
 cd /build/package/src
 
