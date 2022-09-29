@@ -5,6 +5,8 @@ PRISTINE_CODE=/build/pristine.wasm
 
 # 1. Decompress source tarball
 
+## TBD
+
 # 2. Find contract metadata
 
 CONTRACT_FILES=(/build/package/*.contract)
@@ -19,7 +21,7 @@ if ! echo "$SHA256_CONTRACT $PRISTINE_CODE" | sha256sum -c -; then
   exit 1
 fi
 
-#4. Parse build info
+# 4. Parse build info
 
 function json::read() {
   local r=$(jq -r "$1" "$CONTRACT_FILE")
@@ -46,7 +48,7 @@ echo "Build Info
 - binaryen_version: ${binaryen_version}
 "
 
-# 3. Install binaryen
+# 5. Install binaryen
 
 BINARYEN_DST="/root/.cache/binaryen/${binaryen_version}"
 
@@ -63,7 +65,7 @@ fi
 ln -sfvT "${BINARYEN_DST}/wasm-opt" /usr/local/bin/wasm-opt
 wasm-opt --version
 
-# 4. Setup toolchain
+# 6. Setup toolchain
 
 echo "Info: RUSTC_WRAPPER=$RUSTC_WRAPPER"
 sccache -s
@@ -78,7 +80,7 @@ cargo install cargo-dylint dylint-link
 # Install ink! cargo-contract tool
 cargo install "cargo-contract@${cargo_contract_version}"
 
-# 5. Build contract
+# 7. Build contract
 
 BUILD_PARAMS="--skip-linting"
 
@@ -93,7 +95,7 @@ cd /build/package/src
 
 cargo +"${rustc_version}" contract build ${BUILD_PARAMS}
 
-# 5. Verify against pristine
+# 8. Verify against pristine
 
 WASM_FILES=(/build/package/src/target/ink/*.wasm)
 WASM_FILE="${WASM_FILES[0]}"
