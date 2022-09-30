@@ -3,9 +3,29 @@ set -eu
 
 PRISTINE_CODE=/build/pristine.wasm
 
+err() {
+  printf >&2 "$*\n"
+  exit 1
+}
+
 # 1. Decompress source tarball
 
-## TBD
+TARGET=/build/package
+ARCHIVES=(/build/package.*)
+ARCHIVE="${ARCHIVES[0]}"
+
+[[ -f $ARCHIVE ]] || err $"No archive found";
+echo "Found archive $ARCHIVE, starting extraction..."
+
+TYPE=$(file $ARCHIVE)
+case $TYPE in
+  *"gzip"*)  tar xzf "$ARCHIVE" -C "$TARGET";;
+  *"bzip2"*) tar xjf "$ARCHIVE" -C "$TARGET";;
+  *"Zip"*)   unzip "$ARCHIVE" -d "$TARGET";;
+  *)         err $"Format not supported";;
+esac
+
+echo "Extraction complete"
 
 # 2. Find contract metadata
 
@@ -17,8 +37,7 @@ CONTRACT_FILE="${CONTRACT_FILES[0]}"
 SHA256_CONTRACT=$(jq -r ".source.wasm" "$CONTRACT_FILE" | xxd -r -p | sha256sum | cut -f 1 -d " ")
 
 if ! echo "$SHA256_CONTRACT $PRISTINE_CODE" | sha256sum -c -; then
-  echo "Pristine code checksum failed." >&2
-  exit 1
+  err $"Pristine code checksum failed."
 fi
 
 # 4. Parse build info
@@ -29,8 +48,7 @@ function json::read() {
 }
 
 if ! jq -e '.source | has("build_info")' "$CONTRACT_FILE"; then
-  echo "Build info not present in metadata." >&2
-  exit 1
+  err $"Build info not present in metadata."
 fi
 
 build_mode=$(json::read '.source.build_info.build_mode')
@@ -102,8 +120,7 @@ WASM_FILES=(/build/package/src/target/ink/*.wasm)
 WASM_FILE="${WASM_FILES[0]}"
 
 if ! echo "$SHA256_CONTRACT $WASM_FILE" | sha256sum -c -; then
-  echo "Target WASM code checksum failed." >&2
-  exit 1
+  err $"Target WASM code checksum failed."
 fi
 
 echo "
