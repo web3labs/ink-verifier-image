@@ -2,3 +2,5 @@
 .cargo
 .rustup
 .build/
+.dist/
+security/

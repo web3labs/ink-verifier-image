@@ -1,4 +1,5 @@
 .cache
 .cargo
 .rustup
+.dist/
 .build/
