@@ -16,17 +16,13 @@ verify CODE_HASH BASE_DIR=`pwd` NETWORK="rococo":
     -v {{BASE_DIR}}/.rustup:/usr/local/rustup \
     --rm ink-verifier:develop
 
-
-tmpdir  := `mktemp -d`
-buidir  := tmpdir / "contract-build"
-
-package SRC_DIR DST_DIR=".dist":
-  mkdir -p {{buidir}}
+package SRC_DIR DST_DIR=".dist" BUILD_DIR="/tmp/contract-build":
+  mkdir -p {{BUILD_DIR}}
   mkdir -p {{DST_DIR}}
-  rm -rf {{buidir}}/*
-  cp -r {{SRC_DIR}} {{buidir}}/src
-  mv {{buidir}}/src/target/ink/*.contract {{buidir}}/
-  rm -rf {{buidir}}/src/target
-  (cd {{buidir}} && zip -r - src/ *.contract) > {{DST_DIR}}/package.zip
-  rm -rf {{tmpdir}}
+  rm -rf {{BUILD_DIR}}/*
+  cp -r {{SRC_DIR}} {{BUILD_DIR}}/src
+  mv {{BUILD_DIR}}/src/target/ink/*.contract {{BUILD_DIR}}/
+  rm -rf {{BUILD_DIR}}/src/target
+  (cd {{BUILD_DIR}} && zip -r - src/ *.contract) > {{DST_DIR}}/package.zip
+  rm -rf {{BUILD_DIR}}
   unzip -l {{DST_DIR}}/package.zip
