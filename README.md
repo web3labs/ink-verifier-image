@@ -34,7 +34,7 @@ package
 └── src
     ├── Cargo.lock
     ├── Cargo.toml
-    ├── lib.rs
+    └── lib.rs
 ```
 
 and (2) `pristine.wasm` is the WASM bytecode retrieved from the chain.
