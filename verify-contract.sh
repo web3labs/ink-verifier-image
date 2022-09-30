@@ -75,7 +75,6 @@ if [ ! -f "${BINARYEN_DST}/wasm-opt" ]; then
 
   mkdir -p $BINARYEN_DST
   curl -s "https://github.com/WebAssembly/binaryen/releases/download/version_${binaryen_version}/binaryen-version_${binaryen_version}-x86_64-linux.tar.gz" -L | tar -xz -C /tmp
-  ## TODO checksum...
   mv "/tmp/binaryen-version_${binaryen_version}/bin/wasm-opt" $BINARYEN_DST
 fi
 
