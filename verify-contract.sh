@@ -32,6 +32,7 @@ echo "Extraction complete"
 
 CONTRACT_FILES=(/build/package/*.contract)
 CONTRACT_FILE="${CONTRACT_FILES[0]}"
+[[ -f $CONTRACT_FILE ]] || err $"No .contract file found";
 
 # 3. Verify that WASM matches pristine code on-chain
 
