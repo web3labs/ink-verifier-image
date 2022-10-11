@@ -96,7 +96,7 @@ rustup component add rust-src --toolchain "${rustc_version}"
 cargo install cargo-dylint dylint-link
 
 # Install ink! cargo-contract tool
-cargo install "cargo-contract@${cargo_contract_version}"
+cargo install --version "${cargo_contract_version}" cargo-contract
 
 # 7. Build contract
 
