@@ -6,7 +6,7 @@
 docker build . -t ink-verifier:develop
 ```
 
-# Verifcation
+# Verification
 
 ## Pre-requisites
 
