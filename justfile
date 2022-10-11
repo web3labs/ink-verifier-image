@@ -8,7 +8,7 @@ default:
 build-image:
   docker build . -t ink-verifier:develop
 
-verify CODE_HASH BASE_DIR=`pwd` NETWORK="rococo":
+verify CODE_HASH NETWORK="rococo" BASE_DIR=`pwd`:
   docker run \
     -v {{BASE_DIR}}/{{NETWORK}}/{{CODE_HASH}}:/build \
     -v {{BASE_DIR}}/.cache:/root/.cache \
