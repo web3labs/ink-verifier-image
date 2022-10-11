@@ -17,6 +17,7 @@ ARCHIVE="${ARCHIVES[0]}"
 [[ -f $ARCHIVE ]] || err $"No archive found";
 echo "Found archive $ARCHIVE, starting extraction..."
 
+mkdir -p $TARGET
 TYPE=$(file $ARCHIVE)
 case $TYPE in
   *"gzip"*)  tar xzf "$ARCHIVE" -C "$TARGET";;
