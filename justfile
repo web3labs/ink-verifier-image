@@ -11,7 +11,7 @@ build-image:
 verify CODE_HASH NETWORK="rococo" BASE_DIR=`pwd`:
   docker run \
     -v {{BASE_DIR}}/{{NETWORK}}/{{CODE_HASH}}:/build \
-    -v {{BASE_DIR}}/.cache:/root/.cache \
+    -v {{BASE_DIR}}/.cache:/opt/.cache \
     -v {{BASE_DIR}}/.cargo/registry:/usr/local/cargo/registry \
     -v {{BASE_DIR}}/.rustup:/usr/local/rustup \
     --rm ink-verifier:develop

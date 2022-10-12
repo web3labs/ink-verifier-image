@@ -70,7 +70,7 @@ echo "Build Info
 
 # 5. Install binaryen
 
-BINARYEN_DST="/root/.cache/binaryen/${binaryen_version}"
+BINARYEN_DST="/opt/.cache/binaryen/${binaryen_version}"
 
 if [ ! -f "${BINARYEN_DST}/wasm-opt" ]; then
   echo "Installing binaryen ${binaryen_version}"
@@ -85,8 +85,6 @@ ln -sfvT "${BINARYEN_DST}/wasm-opt" /usr/local/bin/wasm-opt
 wasm-opt --version
 
 # 6. Setup toolchain
-
-echo "RUSTC_WRAPPER=$RUSTC_WRAPPER"
 
 rustup toolchain install "${rustc_version}"
 rustup target add wasm32-unknown-unknown --toolchain "${rustc_version}"

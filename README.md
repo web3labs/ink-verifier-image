@@ -14,7 +14,7 @@ The image expects the following volume mappings:
 |Mount Point|Description|
 |-|-|
 |/build|Contains the package to be verified|
-|/root/.cache|sccache directory|
+|/opt/.cache|cached downloads directory|
 |/usr/local/cargo/registry|Cargo registry|
 |/usr/local/rustup|Rustup caches and artifacts|
 
@@ -48,7 +48,7 @@ See https://github.com/paritytech/cargo-contract/issues/525
 ```
 docker run \
   -v /opt/ink-builds/rococo/0x51606b677cc203a561cd0cfbba708024feb85f46fe42238afc55a115785e1f95:/build \
-  -v /opt/ink-builds/.cache:/root/.cache \
+  -v /opt/ink-builds/.cache:/opt/.cache \
   -v /opt/ink-builds/.cargo/registry:/usr/local/cargo/registry \
   -v /opt/ink-builds/.rustup:/usr/local/rustup \
   --rm ink-verifier:develop
