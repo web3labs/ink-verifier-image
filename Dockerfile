@@ -11,7 +11,10 @@ RUN cargo --version
 
 WORKDIR /build
 
-COPY verify-contract.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/verify-contract.sh
+COPY scripts/build-contract.sh /usr/local/bin/build-contract
+RUN chmod +x /usr/local/bin/build-contract
 
-ENTRYPOINT ["verify-contract.sh"]
+COPY scripts/verify-contract.sh /usr/local/bin/verify-contract
+RUN chmod +x /usr/local/bin/verify-contract
+
+ENTRYPOINT ["verify-contract"]
