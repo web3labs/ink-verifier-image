@@ -3,5 +3,5 @@
 .rustup
 .build/
 .dist/
+docs/
 cli/
-security/
