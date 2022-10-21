@@ -1,0 +1,10 @@
+[package]
+name = "gen-ink-pack"
+authors = ["Frankie OM <frozen.pomelo@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+description = "A command line interface to generate verifiable source code packages."
+
+[dependencies]
+clap = { version = "4.0.17", features = ["derive"] }
+ctrlc = { version = "3.2.3", features = ["termination"] }
