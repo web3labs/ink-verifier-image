@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# ------------------------------------------------------------------
+# Builds ink! contract source code for the provided build options.
+#
+# Expects that the variable 'SRC_ROOT' is specified by 
+# the calling context.
+# ------------------------------------------------------------------
 set -eu
 
 build_mode=${BUILD_MODE:-Release}
@@ -46,7 +52,6 @@ cargo install --version "${cargo_contract_version}" cargo-contract
 
 # 3. Build contract
 
-SRC_ROOT="${SRC_ROOT:-/build}"
 BUILD_PARAMS="--skip-linting"
 
 if [ $build_mode == "Release" ]; then

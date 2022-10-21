@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# ------------------------------------------------------------------
+# Processes a verifiable source code package.
+#
+# Builds the contract artifacts from the compressed archive and
+# checks the generated binary with the provided 'pristine.wasm'.
+# ------------------------------------------------------------------
 set -eu
 
 PRISTINE_CODE=/build/pristine.wasm
