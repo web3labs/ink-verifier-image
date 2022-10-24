@@ -100,7 +100,6 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     Err(Error::new(ErrorKind::Interrupted, "Interrupted"))
 }
 
-/// Entry point for the CLI program.
 fn main() -> Result<(), Error> {
     let args = Args::parse();
     let status = exec_build(args)?;
