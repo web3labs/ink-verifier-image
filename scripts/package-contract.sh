@@ -1,35 +1,34 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------
 # Builds ink! contract source code and generates a compressed
-# archive suitable for uploading to the verification service.
+# archive suitable for uploading to the source code verification service.
 # ------------------------------------------------------------------
 set -eu
 
-SRC_ROOT="${SRC_ROOT:-/build}"
-TMP_PACKAGE_BASE="$SRC_ROOT/package"
-TMP_PACKAGE_SRC="$TMP_PACKAGE_BASE/src"
-TMP_PACKAGE_TARGET="$TMP_PACKAGE_SRC/target"
-PACKAGE_DST="${SRC_ROOT}/target/ink/package.zip"
-TMP_STAGING="/tmp/s.1"
+TMP_STAGING="/tmp/.package"
 
 # We pin the root source path to emit stable dir names
 # on debug info (to `/build/package/src`).
 # When/if cargo-contracts supports adding RUSTC_FLAGS we could
 # use 'remap-path-prefix'
 mkdir -p "$TMP_STAGING"
-cp -r ${SRC_ROOT}/* "$TMP_STAGING"
-mkdir -p "$TMP_PACKAGE_BASE" 
-mv "$TMP_STAGING" "$TMP_PACKAGE_SRC"
-SRC_ROOT="$TMP_PACKAGE_SRC"
+cp -r /build/* "$TMP_STAGING"
+mkdir -p /build/package
+mv "$TMP_STAGING" /build/package/src
 
 # Build contract
+SRC_ROOT=/build/package/src
 . /usr/local/bin/build-contract
 
 # Build verification package
-mv ${TMP_PACKAGE_TARGET}/ink/*.contract "${TMP_PACKAGE_BASE}"
-rm -rf "$TMP_PACKAGE_TARGET"
-(cd "${TMP_PACKAGE_BASE}" && zip -r - src/ *.contract) > "$PACKAGE_DST"
-rm -rf  "$TMP_PACKAGE_BASE"
+PACKAGE_DST="/build/target/ink/package.zip"
+
+mkdir -p /build/target/ink/
+mv /build/package/src/target/ink /tmp/.ink
+mv /tmp/.ink/*.contract /build/package
+rm -rf /build/package/src/target
+(cd /build/package && zip -r - src/ *.contract) > "$PACKAGE_DST"
+rm -rf  /build/package
 
 echo "Verification package in $PACKAGE_DST"
 unzip -l "$PACKAGE_DST"
