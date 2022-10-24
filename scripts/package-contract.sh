@@ -10,13 +10,16 @@ TMP_PACKAGE_BASE="$SRC_ROOT/package"
 TMP_PACKAGE_SRC="$TMP_PACKAGE_BASE/src"
 TMP_PACKAGE_TARGET="$TMP_PACKAGE_SRC/target"
 PACKAGE_DST="${SRC_ROOT}/target/ink/package.zip"
+TMP_STAGING="/tmp/s.1"
 
 # We pin the root source path to emit stable dir names
 # on debug info (to `/build/package/src`).
 # When/if cargo-contracts supports adding RUSTC_FLAGS we could
 # use 'remap-path-prefix'
-mkdir -p "$TMP_PACKAGE_SRC"
-cp -r ${SRC_ROOT}/* "$TMP_PACKAGE_SRC"
+mkdir -p "$TMP_STAGING"
+cp -r ${SRC_ROOT}/* "$TMP_STAGING"
+mkdir -p "$TMP_PACKAGE_BASE" 
+mv "$TMP_STAGING" "$TMP_PACKAGE_SRC"
 SRC_ROOT="$TMP_PACKAGE_SRC"
 
 # Build contract
