@@ -2,7 +2,11 @@
 
 use std::{
     io,
-    process::{Child, Command, ExitStatus},
+    process::{
+        Child,
+        Command,
+        ExitStatus,
+    },
 };
 
 #[derive(Debug)]
