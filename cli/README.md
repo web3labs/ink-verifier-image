@@ -4,10 +4,10 @@
 
 Using the Git repository
 ```
-cargo install --bin build-verifiable-ink --git https://github.com/web3labs/ink-verifier.git
+cargo install --git https://github.com/web3labs/ink-verifier.git
 ```
 
-or local
+or from source
 ```
-cargo install --bin build-verifiable-ink --path=.
+cargo install --path .
 ```
