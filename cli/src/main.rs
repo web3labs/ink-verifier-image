@@ -28,6 +28,10 @@ struct Args {
     /// Container engine
     #[arg(long, default_value = "docker")]
     engine: String,
+
+    /// Environment file
+    #[arg(long)]
+    env_file: Option<String>,
 }
 
 /// Executes the contract build process.
@@ -50,20 +54,26 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     })
     .expect("Error setting Ctrl-C handler");
 
-    let mut pg = pg::ProcessGuard::spawn(
-        Command::new(args.engine)
-            .args([
-                "run",
-                "--entrypoint",
-                "package-contract",
-                "-v",
-                &format!("{build_dir}:/build",),
-                "--rm",
-                &format!("ink-verifier:{tag}"),
-            ])
-            // TODO: check env handling
-            .envs(env::vars()),
-    )?;
+    let build_vol = &format!("{build_dir}:/build");
+    let image = &format!("ink-verifier:{tag}");
+
+    let mut cmd_args = vec![
+        "run",
+        "--entrypoint",
+        "package-contract",
+        "-v",
+        build_vol,
+        "--rm",
+    ];
+
+    if let Some(env_file) = args.env_file.as_ref() {
+        cmd_args.push("--env-file");
+        cmd_args.push(env_file)
+    }
+
+    cmd_args.push(image);
+
+    let mut pg = pg::ProcessGuard::spawn(Command::new(args.engine).args(cmd_args))?;
 
     while running.load(Ordering::SeqCst) {
         match pg.try_wait()? {
