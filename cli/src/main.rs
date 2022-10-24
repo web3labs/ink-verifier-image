@@ -1,11 +1,20 @@
 use clap::Parser;
 use std::{
-    env,
-    io::{Error, ErrorKind},
+    fs,
+    io::{
+        Error,
+        ErrorKind,
+    },
     path::PathBuf,
-    process::{Command, ExitStatus},
+    process::{
+        Command,
+        ExitStatus,
+    },
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{
+            AtomicBool,
+            Ordering,
+        },
         Arc,
     },
     thread,
@@ -21,9 +30,9 @@ struct Args {
     #[arg(short, long, default_value = "develop")]
     tag: String,
 
-    /// Source folder [default: $CWD]
+    /// Source directory, e.g. "."
     #[arg(short, long, value_parser)]
-    source: Option<PathBuf>,
+    source: PathBuf,
 
     /// Container engine
     #[arg(long, default_value = "docker")]
@@ -40,11 +49,14 @@ struct Args {
 /// It requires the docker command to be installed in the system.
 fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     let tag = args.tag;
-    let path: PathBuf = args.source.unwrap_or(env::current_dir()?);
+    let path: PathBuf = args.source;
 
     assert!(path.exists());
 
-    let build_dir = path.into_os_string().into_string().unwrap();
+    let build_dir = fs::canonicalize(&path)?
+        .into_os_string()
+        .into_string()
+        .unwrap();
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
@@ -72,6 +84,8 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     }
 
     cmd_args.push(image);
+
+    println!("Building package w/ args: {:?}", cmd_args);
 
     let mut pg = pg::ProcessGuard::spawn(Command::new(args.engine).args(cmd_args))?;
 
