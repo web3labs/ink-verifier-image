@@ -26,6 +26,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
+name = "build-verifiable-ink"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "ctrlc",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -76,14 +84,6 @@ checksum = "1d91974fbbe88ec1df0c24a4f00f99583667a7e2e6272b2b92d294d81e462173"
 dependencies = [
  "nix",
  "winapi",
-]
-
-[[package]]
-name = "gen-ink-pack"
-version = "0.1.0"
-dependencies = [
- "clap",
- "ctrlc",
 ]
 
 [[package]]

@@ -1,9 +1,15 @@
 [package]
-name = "gen-ink-pack"
+name = "build-verifiable-ink"
 authors = ["Frankie O'Malley Blissett <frozen.pomelo@gmail.com>"]
+license = "Apache-2.0"
 version = "0.1.0"
 edition = "2021"
 description = "A command line interface to generate verifiable source code packages."
+readme = "README.md"
+homepage = "https://github.com/web3labs/ink-verifier/tree/main/cli"
+repository = "https://github.com/web3labs/ink-verifier/tree/main/cli"
+keywords = ["cli", "verifiable", "build", "ink!"]
+categories = ["command-line-utilities", "smart-contracts"]
 
 [dependencies]
 clap = { version = "4.0.17", features = ["derive"] }
