@@ -30,8 +30,8 @@ struct Args {
     #[arg(short, long, default_value = "develop")]
     tag: String,
 
-    /// Source directory, e.g. "."
-    #[arg(short, long, value_parser)]
+    /// Source directory, can be relative; e.g. '.'
+    #[arg(required = true, value_parser)]
     source: PathBuf,
 
     /// Container engine
