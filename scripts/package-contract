@@ -33,3 +33,5 @@ rm -rf  /build/package
 
 echo "Verification package in $PACKAGE_DST"
 unzip -l "$PACKAGE_DST"
+
+exit 0
