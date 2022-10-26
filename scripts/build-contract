@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# ------------------------------------------------------------------
+# Builds ink! contract source code for the provided build options.
+#
+# Expects that the variable 'SRC_ROOT' is specified by 
+# the calling context.
+# ------------------------------------------------------------------
+set -eu
+
+build_mode=${BUILD_MODE:-Release}
+cargo_contract_version=${CARGO_CONTRACT_VERSION:-2.0.0-alpha.4}
+rust_toolchain=${RUST_TOOLCHAIN:-stable-x86_64-unknown-linux-gnu}
+keep_debug_symbols=${KEEP_DEBUG_SYMBOLS:-false}
+optimization_passes=${OPTIMIZATION_PASSES:-Z}
+binaryen_version=${BINARYEN_VERSION:-109}
+
+echo "Build Info
+
+- build_mode: ${build_mode}
+- cargo_contract_version: ${cargo_contract_version}
+- rustc_toolchain: ${rust_toolchain}
+- optimization_passes: ${optimization_passes}
+- keep_debug_symbols: ${keep_debug_symbols}
+- binaryen_version: ${binaryen_version}
+"
+
+# 1. Install binaryen
+# TODO: installing binaryen will be no longer needed
+
+BINARYEN_DST="/opt/.cache/binaryen/${binaryen_version}"
+
+if [ ! -f "${BINARYEN_DST}/wasm-opt" ]; then
+  echo "Installing binaryen ${binaryen_version}"
+
+  mkdir -p $BINARYEN_DST
+  curl -s "https://github.com/WebAssembly/binaryen/releases/download/version_${binaryen_version}/binaryen-version_${binaryen_version}-x86_64-linux.tar.gz" -L | tar -xz -C /tmp
+  mv "/tmp/binaryen-version_${binaryen_version}/bin/wasm-opt" $BINARYEN_DST
+fi
+
+# Activate proper wasm-opt version
+ln -sfvT "${BINARYEN_DST}/wasm-opt" /usr/local/bin/wasm-opt
+wasm-opt --version
+
+# 2. Setup toolchain
+
+rustup toolchain install "${rust_toolchain}"
+rustup target add wasm32-unknown-unknown --toolchain "${rust_toolchain}"
+rustup component add rust-src --toolchain "${rust_toolchain}"
+
+# Install dylint-link
+cargo install cargo-dylint dylint-link
+
+# Install ink! cargo-contract tool
+if [ $cargo_contract_version == "2.0.0-alpha.4"]; then
+  # Install unreleased cargo contract tool, needed because build info
+  # still not available
+  cargo install --git https://github.com/paritytech/cargo-contract \
+                --locked --branch master --force
+else
+  cargo install --version "${cargo_contract_version}" cargo-contract
+fi
+
+# 3. Build contract
+
+BUILD_PARAMS="--skip-linting"
+
+if [ $build_mode == "Release" ]; then
+  # release is a boolean flag
+  BUILD_PARAMS="${BUILD_PARAMS} --release"
+fi
+
+if [ $keep_debug_symbols == "true" ]; then
+  BUILD_PARAMS="${BUILD_PARAMS} --keep-debug-symbols"
+fi
+
+BUILD_PARAMS="${BUILD_PARAMS} --optimization-passes ${optimization_passes}"
+
+echo "SRC_ROOT=$SRC_ROOT"
+echo "BUILD_PARAMS=$BUILD_PARAMS"
+
+cd $SRC_ROOT
+
+cargo +"${rustc_version}" contract build ${BUILD_PARAMS}
