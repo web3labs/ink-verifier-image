@@ -77,6 +77,7 @@ BUILD_PARAMS="${BUILD_PARAMS} --optimization-passes ${optimization_passes}"
 
 echo "SRC_ROOT=$SRC_ROOT"
 echo "BUILD_PARAMS=$BUILD_PARAMS"
+echo cargo contract -V
 
 cd $SRC_ROOT
 
