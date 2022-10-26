@@ -80,4 +80,4 @@ echo "BUILD_PARAMS=$BUILD_PARAMS"
 
 cd $SRC_ROOT
 
-cargo +"${rustc_version}" contract build ${BUILD_PARAMS}
+cargo +"${rust_toolchain}" contract build ${BUILD_PARAMS}
