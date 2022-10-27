@@ -62,7 +62,7 @@ fi
 
 # 3. Build contract
 
-BUILD_PARAMS="--skip-linting"
+BUILD_PARAMS=""
 
 if [ $build_mode == "Release" ]; then
   # release is a boolean flag
