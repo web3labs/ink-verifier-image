@@ -55,7 +55,7 @@ if [ $cargo_contract_version == "2.0.0-alpha.4" ]; then
   # Install unreleased cargo contract tool, needed because build info
   # still not available
   cargo install --git https://github.com/paritytech/cargo-contract \
-                --locked --branch master --force
+                --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e --force
 else
   cargo install --version "${cargo_contract_version}" cargo-contract
 fi
