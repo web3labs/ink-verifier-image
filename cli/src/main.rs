@@ -27,7 +27,7 @@ mod pg;
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Ink! verifier image tag
-    #[arg(short, long, default_value = "develop")]
+    #[arg(short, long, default_value = "latest")]
     tag: String,
 
     /// Source directory, can be relative; e.g. '.'
