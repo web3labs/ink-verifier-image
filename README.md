@@ -101,7 +101,6 @@ The image expects the following volume mappings:
 |Mount Point|Description|
 |-|-|
 |/build|Contains the package to be verified|
-|/opt/.cache|cached downloads directory|
 |/usr/local/cargo/registry|Cargo registry|
 |/usr/local/rustup|Rustup caches and artifacts|
 

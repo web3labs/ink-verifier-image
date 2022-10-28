@@ -12,7 +12,6 @@ cargo_contract_version=${CARGO_CONTRACT_VERSION:-2.0.0-alpha.4}
 rust_toolchain=${RUST_TOOLCHAIN:-stable-x86_64-unknown-linux-gnu}
 keep_debug_symbols=${KEEP_DEBUG_SYMBOLS:-false}
 optimization_passes=${OPTIMIZATION_PASSES:-Z}
-binaryen_version=${BINARYEN_VERSION:-109}
 
 echo "Build Info
 
@@ -21,27 +20,9 @@ echo "Build Info
 - rustc_toolchain: ${rust_toolchain}
 - optimization_passes: ${optimization_passes}
 - keep_debug_symbols: ${keep_debug_symbols}
-- binaryen_version: ${binaryen_version}
 "
 
-# 1. Install binaryen
-# TODO: installing binaryen will be no longer needed
-
-BINARYEN_DST="/opt/.cache/binaryen/${binaryen_version}"
-
-if [ ! -f "${BINARYEN_DST}/wasm-opt" ]; then
-  echo "Installing binaryen ${binaryen_version}"
-
-  mkdir -p $BINARYEN_DST
-  curl -s "https://github.com/WebAssembly/binaryen/releases/download/version_${binaryen_version}/binaryen-version_${binaryen_version}-x86_64-linux.tar.gz" -L | tar -xz -C /tmp
-  mv "/tmp/binaryen-version_${binaryen_version}/bin/wasm-opt" $BINARYEN_DST
-fi
-
-# Activate proper wasm-opt version
-ln -sfvT "${BINARYEN_DST}/wasm-opt" /usr/local/bin/wasm-opt
-wasm-opt --version
-
-# 2. Setup toolchain
+# 1. Setup toolchain
 
 rustup toolchain install "${rust_toolchain}"
 rustup target add wasm32-unknown-unknown --toolchain "${rust_toolchain}"
@@ -60,7 +41,7 @@ else
   cargo install --version "${cargo_contract_version}" cargo-contract
 fi
 
-# 3. Build contract
+# 2. Build contract
 
 BUILD_PARAMS=""
 
