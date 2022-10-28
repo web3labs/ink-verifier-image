@@ -1,6 +1,7 @@
 .cache
 .cargo
 .rustup
+.github
 .build/
 .dist/
 docs/
