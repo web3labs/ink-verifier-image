@@ -26,6 +26,10 @@ mod pg;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
+    /// Ink! verifier image name
+    #[arg(short, long, default_value = "ink-verifier")]
+    image: String,
+
     /// Ink! verifier image tag
     #[arg(short, long, default_value = "latest")]
     tag: String,
@@ -49,6 +53,7 @@ struct Args {
 /// It requires the docker command to be installed in the system.
 fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     let tag = args.tag;
+    let image = args.image;
     let path: PathBuf = args.source;
 
     assert!(path.exists());
@@ -67,7 +72,7 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
     .expect("Error setting Ctrl-C handler");
 
     let build_vol = &format!("{build_dir}:/build");
-    let image = &format!("ink-verifier:{tag}");
+    let image = &format!("{image}:{tag}");
 
     let mut cmd_args = vec![
         "run",
