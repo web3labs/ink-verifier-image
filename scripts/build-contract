@@ -28,10 +28,8 @@ rustup toolchain install "${rust_toolchain}"
 rustup target add wasm32-unknown-unknown --toolchain "${rust_toolchain}"
 rustup component add rust-src --toolchain "${rust_toolchain}"
 
-# Install dylint-link
-cargo install cargo-dylint dylint-link
-
 # Install ink! cargo-contract tool
+# TODO: allow 2.0.0-alpha.4 and upwards, are in crates.io
 if [ $cargo_contract_version == "2.0.0-alpha.4" ]; then
   # Install unreleased cargo contract tool, needed because build info
   # still not available
