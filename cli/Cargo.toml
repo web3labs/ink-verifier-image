@@ -13,4 +13,3 @@ categories = ["command-line-utilities", "smart-contracts"]
 
 [dependencies]
 clap = { version = "4.0.17", features = ["derive"] }
-ctrlc = { version = "3.2.3", features = ["termination"] }

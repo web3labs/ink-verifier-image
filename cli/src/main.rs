@@ -1,27 +1,13 @@
 use clap::Parser;
 use std::{
     fs,
-    io::{
-        Error,
-        ErrorKind,
-    },
+    io::Error,
     path::PathBuf,
     process::{
         Command,
         ExitStatus,
     },
-    sync::{
-        atomic::{
-            AtomicBool,
-            Ordering,
-        },
-        Arc,
-    },
-    thread,
-    time::Duration,
 };
-
-mod pg;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -63,24 +49,18 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
         .into_string()
         .unwrap();
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-
-    ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
-    })
-    .expect("Error setting Ctrl-C handler");
-
     let build_vol = &format!("{build_dir}:/build");
     let image = &format!("{image}:{tag}");
 
     let mut cmd_args = vec![
         "run",
+        "-i", // Keep STDIN open even if not attached
+        "-t", // Allocate a pseudo-tty
+        "--rm",
         "--entrypoint",
         "package-contract",
         "-v",
         build_vol,
-        "--rm",
     ];
 
     if let Some(env_file) = args.env_file.as_ref() {
@@ -92,17 +72,8 @@ fn exec_build(args: Args) -> Result<ExitStatus, Error> {
 
     println!("Building package w/ args: {:?}", cmd_args);
 
-    let mut pg = pg::ProcessGuard::spawn(Command::new(args.engine).args(cmd_args))?;
-
-    while running.load(Ordering::SeqCst) {
-        match pg.try_wait()? {
-            Some(status) => return Ok(status),
-            // Busy wait :/
-            None => thread::sleep(Duration::from_millis(400)),
-        }
-    }
-
-    Err(Error::new(ErrorKind::Interrupted, "Interrupted"))
+    // Leverage on Docker attached STDIN pseudo-TTY
+    return Command::new(args.engine).args(cmd_args).spawn()?.wait()
 }
 
 fn main() -> Result<(), Error> {
