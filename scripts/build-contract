@@ -22,6 +22,9 @@ echo "Build Info
 - keep_debug_symbols: ${keep_debug_symbols}
 "
 
+echo "In SRC_ROOT"
+ls -lah $SRC_ROOT
+
 # 1. Setup toolchain
 
 rustup toolchain install "${rust_toolchain}"
