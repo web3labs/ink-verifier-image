@@ -20,7 +20,24 @@ To generate a verifiable source code package you can use the provided command li
 2. Change to the directory cointaing the smart contract source code
 3. Execute the tool to generate the package
 
-Example:
+## Example
+
+> WARN: Reproducible builds works works w/ cargo-contract 2.0.0-alpha.4
+> and contracts generated with that version.
+
+To generate example ink! contract install the specific version of the cargo-contract tool:
+
+```
+❯ cargo install --git https://github.com/paritytech/cargo-contract \
+              --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
+              --force
+```
+
+Create the flipper contract:
+
+```
+❯ cargo contract new flipper
+```
 
 Change to the contract directory
 ```
@@ -33,7 +50,7 @@ Change to the contract directory
 ```
 Execute the verifiable package generation tool
 ```
-❯ build-verifiable-ink .
+❯ build-verifiable-ink -t develop .
 [omitted ouput...]
 The contract was built in RELEASE mode.
 
@@ -72,10 +89,32 @@ The verifiable package is generated
         └── package.zip
 ```
 
+The command will generate a `package.zip` in `<your_source_dir>/target/ink` directory.
+
+Please, copy it to a safe location.
+
+You can extract the `<contract name>.contract` and `metadata.json` from the package archive as follows:
+
+```
+❯ unzip -qq -p target/ink/package.zip "*.contract" | jq -r ".source.wasm" | xxd -r -p > target/ink/flipper.wasm
+❯ unzip -qq -p target/ink/package.zip "*.contract" > target/ink/metadata.json
+```
+
+The generated `.contract` file should be uploaded to the blockchain if you want to be able to verify your source code.
+
+Upload example using cargo-contract tool:
+
+```
+❯ cargo contract upload -s '//Bob'
+````
+
+### Notes
+
 To avoid problems with file system permissions we recommend the use of [Podman](https://podman.io/) as container engine.
+
 You can specify the container engine in the command line tool options:
 ```
-❯ build-verifiable-ink --help 
+❯ build-verifiable-ink --help
 A command line interface to generate verifiable source code packages.
 
 Usage: build-verifiable-ink [OPTIONS] <SOURCE>
@@ -84,7 +123,8 @@ Arguments:
   <SOURCE>  Source directory, can be relative; e.g. '.'
 
 Options:
-  -t, --tag <TAG>            Ink! verifier image tag [default: develop]
+  -i, --image <IMAGE>        Ink! verifier image name [default: ink-verifier]
+  -t, --tag <TAG>            Ink! verifier image tag [default: latest]
       --engine <ENGINE>      Container engine [default: docker]
       --env-file <ENV_FILE>  Environment file
   -h, --help                 Print help information
@@ -93,7 +133,9 @@ Options:
 
 # Source Code Verification
 
-This section describes the verification process of generated verifiable source code packages.
+> As an end user you can use either the [Explorer UI](https://github.com/web3labs/epirus-substrate) or the [Source Code Verification Server](https://github.com/web3labs/ink-verifier-server) to verify your source code.
+
+This section describes the verification process of generated verifiable source code packages using the container image.
 
 ## Pre-requisites
 
@@ -125,8 +167,10 @@ package
 
 and (2) `pristine.wasm` is the WASM bytecode retrieved from the chain.
 
-NOTE that the `package.[zip|tgz|tar.gz]` and `pristine.wasm` must be named as indicated.
-NOTE that the `<name>.contract` file must include the `build_info` section and it is not generally available at the moment.
+### Notes
+
+1. The `package.[zip|tgz|tar.gz]` and `pristine.wasm` must be named as indicated.
+2. The `<name>.contract` file must include the `build_info` section and it is not generally available at the moment.
 See https://github.com/paritytech/cargo-contract/issues/525  
 
 ## Running a Verification
