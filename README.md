@@ -95,7 +95,7 @@ The command will generate a `package.zip` in `<your_source_dir>/target/ink` dire
 
 Please, copy it to a safe location.
 
-You can extract the `<contract name>.contract` and `metadata.json` from the package archive as follows:
+You can extract the `<contract name>.wasm` and `metadata.json` from the package archive as follows:
 
 ```
 ❯ unzip -qq -p target/ink/package.zip "*.contract" | jq -r ".source.wasm" | xxd -r -p > target/ink/flipper.wasm
