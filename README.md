@@ -6,6 +6,8 @@ Features:
 - Verification of source packages
 - Verifiable source package generation
 
+See [source code verification explainer](https://github.com/web3labs/ink-verifier/blob/main/docs/SOURCE_CODE_VERIFICATION_EXPLAINER.md) for further info.
+
 # Building
 
 ```
@@ -29,8 +31,8 @@ To generate example ink! contract install the specific version of the cargo-cont
 
 ```
 ❯ cargo install --git https://github.com/paritytech/cargo-contract \
-              --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
-              --force
+                --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
+                --force
 ```
 
 Create the flipper contract:
