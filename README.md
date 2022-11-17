@@ -24,7 +24,7 @@ To generate a verifiable source code package you can use the provided command li
 
 ## Example
 
-> WARN: Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.4
+> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.4
 > and contracts generated with that version.
 
 To generate example ink! contract install the specific version of the cargo-contract tool:

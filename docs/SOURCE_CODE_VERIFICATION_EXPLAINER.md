@@ -1,6 +1,6 @@
 # Source Code Verification Explainer
 
-> 🐉 This image and the described mechanisms are not yet officially supported, therefore are experimental and subject to change. 🐉
+> 🐉🐉 This image and the described mechanisms are not yet officially supported, therefore are experimental and subject to change.
 
 Smart contracts allow users to interact with them without trusting third parties, such as developers or companies. Source code verification assures that a source code matches the binary bytecode deployed on a blockchain in a trustless way. However, source code verification does not ensure the correctness nor the security of a smart contract, which is carried on by "formal verification" techniques.
 
