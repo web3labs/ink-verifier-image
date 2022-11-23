@@ -11,7 +11,12 @@ TMP_STAGING="/tmp/.package"
 # on debug info (to `/build/package/src`).
 # When/if cargo-contracts supports adding RUSTC_FLAGS we could
 # use 'remap-path-prefix'
+
 mkdir -p "$TMP_STAGING"
+
+# Clean existing target
+rm -rf /build/target
+
 cp -r /build/* "$TMP_STAGING"
 mkdir -p /build/package
 rm -rf /build/package/src
