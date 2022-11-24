@@ -1,4 +1,4 @@
-# Verifier Image for Ink!
+# 🦑 Verifier Image for Ink!
 
 Container image for Ink! smart contracts source code verification.
 
