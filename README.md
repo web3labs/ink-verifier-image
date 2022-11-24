@@ -1,12 +1,14 @@
 # 🦑 Verifier Image for Ink!
 
+> 🐉🐉 This image and the described mechanisms are not yet officially supported, therefore are experimental and subject to change.
+
 Container image for Ink! smart contracts source code verification.
 
 Features:
 - Verification of source packages
 - Verifiable source package generation
 
-See [source code verification explainer](https://github.com/web3labs/ink-verifier/blob/main/docs/SOURCE_CODE_VERIFICATION_EXPLAINER.md) for further info.
+See [Ink! Verifier explainer](https://github.com/web3labs/ink-verifier-server/blob/main/docs/INK_VERIFIER_EXPLAINER.md) for further info on how the image is used in the Ink! Verifier Server for a full verification workflow.
 
 # Building
 
@@ -18,7 +20,7 @@ docker build . -t ink-verifier:develop
 
 To generate a verifiable source code package you can use the provided command line tool.
 
-1. Install the command line tool from https://github.com/web3labs/ink-verifier/tree/main/cli
+1. Install the command line tool from https://github.com/web3labs/ink-verifier-image/tree/main/cli
 2. Change to the directory cointaing the smart contract source code
 3. Execute the tool to generate the package
 
