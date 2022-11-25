@@ -12,21 +12,31 @@ See [Ink! Verifier explainer](https://github.com/web3labs/ink-verifier-server/bl
 
 # Building
 
+To build the image locally
+
 ```
 docker build . -t ink-verifier:develop
 ```
 
-# Package Generation
+You can also pull the published image
 
-To generate a verifiable source code package you can use the provided command line tool.
+```
+docker pull ghcr.io/web3labs/ink-verifier:latest
+```
 
-1. Install the command line tool from https://github.com/web3labs/ink-verifier-image/tree/main/cli
+# Reproducible Build
+
+You can build your contract by running the image directly but we highly recommend to use the provided command line tool. Besides running the reproducible build, the tool also packages the relevant files into a handy `package.zip` file with the directory struture that is required for verification.
+
+## Building with command line tool
+
+1. Install the command line tool [here](./cli/README.md)
 2. Change to the directory cointaing the smart contract source code
 3. Execute the tool to generate the package
 
 ## Example
 
-> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.4
+> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.5
 > and contracts generated with that version.
 
 To generate example ink! contract install the specific version of the cargo-contract tool:
@@ -36,6 +46,8 @@ To generate example ink! contract install the specific version of the cargo-cont
                 --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
                 --force
 ```
+
+ℹ️ For the moment, we recommend installing cargo-contract as defined above rather than through [crates.io](https://crates.io/crates/cargo-contract). See the section [Caveats](#caveats) for more information.
 
 Create the flipper contract:
 
@@ -52,9 +64,15 @@ Change to the contract directory
 ├── Cargo.toml
 └── lib.rs
 ```
-Execute the verifiable package generation tool
+
+Pull the docker image
 ```
-❯ build-verifiable-ink -t develop .
+docker pull ghcr.io/web3labs/ink-verifier:latest
+```
+
+Execute the verifiable package generation tool. Check out the `build-verifiable-ink` [documentation](./cli/README.md) for more detailed running instructions.
+```
+❯ build-verifiable-ink .
 [omitted ouput...]
 The contract was built in RELEASE mode.
 
@@ -112,29 +130,6 @@ Upload example using cargo-contract tool:
 ❯ cargo contract upload -s '//Bob'
 ````
 
-### Notes
-
-To avoid problems with file system permissions we recommend the use of [Podman](https://podman.io/) as container engine.
-
-You can specify the container engine in the command line tool options:
-```
-❯ build-verifiable-ink --help
-A command line interface to generate verifiable source code packages.
-
-Usage: build-verifiable-ink [OPTIONS] <SOURCE>
-
-Arguments:
-  <SOURCE>  Source directory, can be relative; e.g. '.'
-
-Options:
-  -i, --image <IMAGE>        Ink! verifier image name [default: ink-verifier]
-  -t, --tag <TAG>            Ink! verifier image tag [default: latest]
-      --engine <ENGINE>      Container engine [default: docker]
-      --env-file <ENV_FILE>  Environment file
-  -h, --help                 Print help information
-  -V, --version              Print version information
-```
-
 # Source Code Verification
 
 > As an end user you can use either the [Explorer UI](https://github.com/web3labs/epirus-substrate) or the [Source Code Verification Server](https://github.com/web3labs/ink-verifier-server) to verify your source code.
@@ -174,8 +169,7 @@ and (2) `pristine.wasm` is the WASM bytecode retrieved from the chain.
 ### Notes
 
 1. The `package.[zip|tgz|tar.gz]` and `pristine.wasm` must be named as indicated.
-2. The `<name>.contract` file must include the `build_info` section and it is not generally available at the moment.
-See https://github.com/paritytech/cargo-contract/issues/525  
+2. The `<name>.contract` file must include the `build_info` section. See [caveats](#caveats) for more information.
 
 ## Running a Verification
 
@@ -187,3 +181,11 @@ docker run \
   -v /opt/ink-builds/.rustup:/usr/local/rustup \
   --rm ink-verifier:develop
 ```
+
+# Caveats
+
+The mechanism for reproducible builds is very new and experimental. Therefore, there are several caveats that should be taken note of.
+
+To ensure an identical build environment to perform a reproducible build, the Ink! team has added the `build_info` entry in generated contract metadata since cargo-contract [v2.0.0-alpha.5](https://github.com/paritytech/cargo-contract/releases/tag/v2.0.0-alpha.5). It should be noted though, that installing `v2.0.0-alpha.5` from crates.io will result in dependencies such as `contract-metadata` and `contract-transcode` to install `v2.0.0-beta`. This is because the dependencies are specified as `^2.0.0-alpha.5` (see crates [dependencies](https://crates.io/crates/cargo-contract/2.0.0-alpha.5/dependencies)). This is not a problem in itself but contracts built with this version can only be deployed on networks that have migrated to [Weights V2](https://github.com/paritytech/polkadot/pull/6091).
+
+In our reproducible build image we are installing cargo-contract from Github from the commit `e2e804be3bab2a987f0441fb8025a5a82da1c10e`. This is done specifically so that verifiable contracts can also be uploaded to our [local-testnet](https://github.com/web3labs/epirus-substrate/tree/main/local-testnet). Our local testnet is a fork of the [Substrate Contracts Node](https://github.com/paritytech/substrate-contracts-node) with a patch for finality with instant seal (see this [pull request](https://github.com/paritytech/substrate/pull/12106) for more information). The updated Substrate Contracts Node that supports Weights V2 does not work with our patch and thus, we have decided to keep with a lower version of cargo-contract. When `instant-seal-with-finality` is officially supported in Substrate Contracts Node, we will update the versions accordingly.
