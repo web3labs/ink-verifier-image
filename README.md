@@ -18,19 +18,13 @@ To build the image locally
 docker build . -t ink-verifier:develop
 ```
 
-You can also pull the published image
-
-```
-docker pull ghcr.io/web3labs/ink-verifier:latest
-```
-
 # Reproducible Build
 
 You can build your contract by running the image directly but we highly recommend to use the provided command line tool. Besides running the reproducible build, the tool also packages the relevant files into a handy `package.zip` file with the directory struture that is required for verification.
 
 ## Building with command line tool
 
-1. Install the command line tool [here](./cli/README.md)
+1. Install the command line tool [here](./cli/README.md#install)
 2. Change to the directory cointaing the smart contract source code
 3. Execute the tool to generate the package
 
@@ -42,7 +36,7 @@ You can build your contract by running the image directly but we highly recommen
 To generate example ink! contract install the specific version of the cargo-contract tool:
 
 ```
-❯ cargo install --git https://github.com/paritytech/cargo-contract \
+cargo install --git https://github.com/paritytech/cargo-contract \
                 --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
                 --force
 ```
@@ -52,7 +46,7 @@ To generate example ink! contract install the specific version of the cargo-cont
 Create the flipper contract:
 
 ```
-❯ cargo contract new flipper
+cargo contract new flipper
 ```
 
 Change to the contract directory
@@ -65,14 +59,9 @@ Change to the contract directory
 └── lib.rs
 ```
 
-Pull the docker image
+Execute the verifiable package generation tool. Check out the `build-verifiable-ink` [documentation](./cli/README.md#run) for more detailed running instructions.
 ```
-docker pull ghcr.io/web3labs/ink-verifier:latest
-```
-
-Execute the verifiable package generation tool. Check out the `build-verifiable-ink` [documentation](./cli/README.md) for more detailed running instructions.
-```
-❯ build-verifiable-ink .
+❯ build-verifiable-ink -t develop .
 [omitted ouput...]
 The contract was built in RELEASE mode.
 
@@ -127,7 +116,7 @@ The generated `.contract` file should be uploaded to the blockchain if you want 
 Upload example using cargo-contract tool:
 
 ```
-❯ cargo contract upload -s '//Bob'
+cargo contract upload -s '//Bob'
 ````
 
 # Source Code Verification
