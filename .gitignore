@@ -3,3 +3,4 @@
 .rustup
 .dist/
 .build/
+.vscode
