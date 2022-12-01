@@ -17,7 +17,8 @@ cargo install --path .
 If you built the docker image locally, you can run the tool by specifying the tag you used for building.
 For example:
 ```
-build-verifiable-ink -t develop /path/to/contract
+❯ cd </path/to/contract>
+❯ build-verifiable-ink -t develop .
 ```
 
 You can also run the tool without building the docker image. In this case, specify the published image using the `--image` or `-i` flag.
