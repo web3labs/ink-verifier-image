@@ -152,6 +152,8 @@ KEEP_DEBUG_SYMBOLS=false
 OPTIMIZATION_PASSES=Z
 ```
 
+ℹ️ Ensure that the ink crate in your `Cargo.toml` is pointing to a version that is compatible with the cargo-contract version used to build the contract. If not, the build will fail! 
+
 ## Source Code Verification
 
 > As an end user you can use either the [Explorer UI](https://github.com/web3labs/epirus-substrate) or the [Source Code Verification Server](https://github.com/web3labs/ink-verifier-server) to verify your source code.
