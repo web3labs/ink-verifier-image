@@ -1,15 +1,5 @@
 # 🦑 Verifier Image for Ink!
 
-- [Building the Verifier Image](#building-the-verifier-image)
-- [Reproducible Build](#reproducible-build)
-  - [Building with Command Line Tool](#building-with-command-line-tool)
-  - [Building with Container Image Directly](#building-with-container-image-directly)
-- [Source Code Verification](#source-code-verification)
-  - [Pre-requisites](#pre-requisites)
-  - [Running a Verification](#running-a-verification)
-- [Caveats](#caveats)
-
-
 > 🐉🐉 This image and the described mechanisms are not yet officially supported, therefore are experimental and subject to change.
 
 Container image for Ink! smart contracts source code verification.
@@ -19,6 +9,16 @@ Features:
 - Verifiable source package generation
 
 See [Ink! Verifier explainer](https://github.com/web3labs/ink-verifier-server/blob/main/docs/INK_VERIFIER_EXPLAINER.md) for further info on how the image is used in the Ink! Verifier Server for a full verification workflow.
+
+**Table of Contents**
+- [Building the Verifier Image](#building-the-verifier-image)
+- [Reproducible Build](#reproducible-build)
+  - [Building with Command Line Tool](#building-with-command-line-tool)
+  - [Building with Container Image Directly](#building-with-container-image-directly)
+- [Source Code Verification](#source-code-verification)
+  - [Pre-requisites](#pre-requisites)
+  - [Running a Verification](#running-a-verification)
+- [Caveats](#caveats)
 
 ## Building the Verifier Image
 
