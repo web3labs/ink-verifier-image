@@ -42,8 +42,8 @@ Arguments:
   <SOURCE>  Source directory, can be relative; e.g. '.'
 
 Options:
-  -i, --image <IMAGE>        Ink! verifier image name [default: ink-verifier]
-  -t, --tag <TAG>            Ink! verifier image tag [default: latest]
+  -i, --image <IMAGE>        ink! verifier image name [default: ink-verifier]
+  -t, --tag <TAG>            ink! verifier image tag [default: latest]
       --engine <ENGINE>      Container engine [default: docker]
       --env-file <ENV_FILE>  Environment file
   -h, --help                 Print help information
