@@ -1,5 +1,15 @@
 # 🦑 Verifier Image for Ink!
 
+- [Building the Verifier Image](#building-the-verifier-image)
+- [Reproducible Build](#reproducible-build)
+  - [Building with Command Line Tool](#building-with-command-line-tool)
+  - [Building with Container Image Directly](#building-with-container-image-directly)
+- [Source Code Verification](#source-code-verification)
+  - [Pre-requisites](#pre-requisites)
+  - [Running a Verification](#running-a-verification)
+- [Caveats](#caveats)
+
+
 > 🐉🐉 This image and the described mechanisms are not yet officially supported, therefore are experimental and subject to change.
 
 Container image for Ink! smart contracts source code verification.
@@ -10,7 +20,7 @@ Features:
 
 See [Ink! Verifier explainer](https://github.com/web3labs/ink-verifier-server/blob/main/docs/INK_VERIFIER_EXPLAINER.md) for further info on how the image is used in the Ink! Verifier Server for a full verification workflow.
 
-# Building
+## Building the Verifier Image
 
 To build the image locally
 
@@ -18,20 +28,20 @@ To build the image locally
 docker build . -t ink-verifier:develop
 ```
 
-# Reproducible Build
+## Reproducible Build
 
-You can build your contract by running the image directly but we highly recommend to use the provided command line tool. Besides running the reproducible build, the tool also packages the relevant files into a handy `package.zip` file with the directory struture that is required for verification.
+> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.4
+> and contracts generated with that version.
 
-## Building with command line tool
+You can build your contract by running the image directly but we also provide a handy command line tool. In the following section we will explain how to generate your verifiable contract package using both methods.
+
+### Building with Command Line Tool
 
 1. Install the command line tool [here](./cli/README.md#install)
 2. Change to the directory cointaing the smart contract source code
 3. Execute the tool to generate the package
 
-## Example
-
-> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.5
-> and contracts generated with that version.
+#### Example <!-- omit from toc --> 
 
 To generate example ink! contract install the specific version of the cargo-contract tool:
 
@@ -104,11 +114,12 @@ The command will generate a `package.zip` in `<your_source_dir>/target/ink` dire
 
 Please, copy it to a safe location.
 
-You can extract the `<contract name>.wasm` and `metadata.json` from the package archive as follows:
+You can extract the `<contract name>.contract`, `metadata.json` and `<contract name>.wasm` from the package archive as follows:
 
 ```
+❯ unzip -qq -p target/ink/package.zip "*.contract" > target/ink/flipper.contract
+❯ unzip -qq -p target/ink/package.zip "*.contract" | jq "del(.source.wasm)" > target/ink/metadata.json
 ❯ unzip -qq -p target/ink/package.zip "*.contract" | jq -r ".source.wasm" | xxd -r -p > target/ink/flipper.wasm
-❯ unzip -qq -p target/ink/package.zip "*.contract" > target/ink/metadata.json
 ```
 
 The generated `.contract` file should be uploaded to the blockchain if you want to be able to verify your source code.
@@ -119,13 +130,35 @@ Upload example using cargo-contract tool:
 cargo contract upload -s '//Bob'
 ````
 
-# Source Code Verification
+### Building with Container Image Directly
+
+> If you want to upload your contract to a network running with Weights V2, such as Rococo Contracts, you will need to use this method to specify `CARGO_CONTRACT_VERSION=2.0.0-beta`
+
+You can run the image directly specifying environment variables with `-e` or `--env` flag.
+
+```
+docker run -i -t --rm --entrypoint package-contract \
+    -v </path/to/contract>:/build \
+    -e CARGO_CONTRACT_VERSION=2.0.0-beta \
+    -i ink-verifier:develop
+```
+
+Environment variables supported (and their default values):
+```
+BUILD_MODE=Release
+CARGO_CONTRACT_VERSION=2.0.0-alpha.4
+RUST_TOOLCHAIN=stable-x86_64-unknown-linux-gnu
+KEEP_DEBUG_SYMBOLS=false
+OPTIMIZATION_PASSES=Z
+```
+
+## Source Code Verification
 
 > As an end user you can use either the [Explorer UI](https://github.com/web3labs/epirus-substrate) or the [Source Code Verification Server](https://github.com/web3labs/ink-verifier-server) to verify your source code.
 
 This section describes the verification process of generated verifiable source code packages using the container image.
 
-## Pre-requisites
+### Pre-requisites
 
 The image expects the following volume mappings:
 |Mount Point|Description|
@@ -155,12 +188,12 @@ package
 
 and (2) `pristine.wasm` is the WASM bytecode retrieved from the chain.
 
-### Notes
+#### Notes <!-- omit from toc --> 
 
 1. The `package.[zip|tgz|tar.gz]` and `pristine.wasm` must be named as indicated.
 2. The `<name>.contract` file must include the `build_info` section. See [caveats](#caveats) for more information.
 
-## Running a Verification
+### Running a Verification
 
 ```
 docker run \
@@ -171,7 +204,7 @@ docker run \
   --rm ink-verifier:develop
 ```
 
-# Caveats
+## Caveats
 
 The mechanism for reproducible builds is very new and experimental. Therefore, there are several caveats that should be taken note of.
 
