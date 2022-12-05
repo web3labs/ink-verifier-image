@@ -124,10 +124,13 @@ You can extract the `<contract name>.contract`, `metadata.json` and `<contract n
 
 The generated `.contract` file should be uploaded to the blockchain if you want to be able to verify your source code.
 
-Upload example using cargo-contract tool:
+Upload and instantiate example using cargo-contract tool:
 
 ```
-cargo contract upload -s '//Bob'
+cargo contract instantiate \
+--constructor new \
+--args false \
+--suri //Alice
 ````
 
 ### Building with Container Image Directly
