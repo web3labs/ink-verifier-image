@@ -201,8 +201,6 @@ docker run \
 
 ## Caveats
 
-The mechanism for reproducible builds is very new and experimental. Therefore, there are several caveats that should be taken note of.
+The mechanism for reproducible builds is very new and experimental. Therefore, there are some caveats that should be taken note of.
 
 To ensure an identical build environment to perform a reproducible build, the ink! team has added the `build_info` entry in generated contract metadata since cargo-contract [v2.0.0-alpha.5](https://github.com/paritytech/cargo-contract/releases/tag/v2.0.0-alpha.5). It should be noted though, that installing `v2.0.0-alpha.5` from crates.io will result in dependencies such as `contract-metadata` and `contract-transcode` to install `v2.0.0-beta`. This is because the dependencies are specified as `^2.0.0-alpha.5` (see crates [dependencies](https://crates.io/crates/cargo-contract/2.0.0-alpha.5/dependencies)). This is not a problem in itself but contracts built with this version can only be deployed on networks that have migrated to [Weights V2](https://github.com/paritytech/polkadot/pull/6091).
-
-In our reproducible build image we are installing cargo-contract from Github from the commit `e2e804be3bab2a987f0441fb8025a5a82da1c10e`. This is done specifically so that verifiable contracts can also be uploaded to our [local-testnet](https://github.com/web3labs/epirus-substrate/tree/main/local-testnet). Our local testnet is a fork of the [Substrate Contracts Node](https://github.com/paritytech/substrate-contracts-node) with a patch for finality with instant seal (see this [pull request](https://github.com/paritytech/substrate/pull/12106) for more information). The updated Substrate Contracts Node that supports Weights V2 does not work with our patch and thus, we have decided to keep with a lower version of cargo-contract. When `instant-seal-with-finality` is officially supported in Substrate Contracts Node, we will update the versions accordingly.
