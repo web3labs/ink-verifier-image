@@ -30,7 +30,7 @@ docker build . -t ink-verifier:develop
 
 ## Reproducible Build
 
-> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0-alpha.4
+> 🐉🐉 Reproducible builds only works w/ cargo-contract >= 2.0.0
 > and contracts generated with that version.
 
 You can build your contract by running the image directly but we also provide a handy command line tool. In the following section we will explain how to generate your verifiable contract package using both methods.
@@ -43,15 +43,7 @@ You can build your contract by running the image directly but we also provide a 
 
 #### Example <!-- omit from toc --> 
 
-To generate example ink! contract install the specific version of the cargo-contract tool:
-
-```
-cargo install --git https://github.com/paritytech/cargo-contract \
-                --locked --rev e2e804be3bab2a987f0441fb8025a5a82da1c10e \ 
-                --force
-```
-
-ℹ️ For the moment, we recommend installing cargo-contract as defined above rather than through [crates.io](https://crates.io/crates/cargo-contract). See the section [Caveats](#caveats) for more information.
+To generate the example ink! contract install the [cargo-contract](https://github.com/paritytech/cargo-contract) tool. Please, read the [installation section](https://github.com/paritytech/cargo-contract#installation) from the README.
 
 Create the flipper contract:
 
@@ -135,21 +127,19 @@ cargo contract instantiate \
 
 ### Building with Container Image Directly
 
-> If you want to upload your contract to a network running with Weights V2, such as Rococo Contracts, you will need to use this method to specify `CARGO_CONTRACT_VERSION=2.0.0-beta`
-
 You can run the image directly specifying environment variables with `-e` or `--env` flag.
 
 ```
 docker run -i -t --rm --entrypoint package-contract \
     -v </path/to/contract>:/build \
-    -e CARGO_CONTRACT_VERSION=2.0.0-beta \
+    -e CARGO_CONTRACT_VERSION=2.0.2 \
     -i ink-verifier:develop
 ```
 
 Environment variables supported (and their default values):
 ```
 BUILD_MODE=Release
-CARGO_CONTRACT_VERSION=2.0.0-alpha.4
+CARGO_CONTRACT_VERSION=2.0.2
 RUST_TOOLCHAIN=stable-x86_64-unknown-linux-gnu
 KEEP_DEBUG_SYMBOLS=false
 OPTIMIZATION_PASSES=Z
