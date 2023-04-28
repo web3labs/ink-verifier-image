@@ -140,7 +140,7 @@ Environment variables supported (and their default values):
 ```
 BUILD_MODE=Release
 CARGO_CONTRACT_VERSION=2.2.0
-RUST_TOOLCHAIN=1.66.1-x86_64-unknown-linux-gnu
+RUST_TOOLCHAIN=1.69.0-x86_64-unknown-linux-gnu
 KEEP_DEBUG_SYMBOLS=false
 OPTIMIZATION_PASSES=Z
 ```
