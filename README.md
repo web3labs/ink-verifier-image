@@ -132,14 +132,14 @@ You can run the image directly specifying environment variables with `-e` or `--
 ```
 docker run -i -t --rm --entrypoint package-contract \
     -v </path/to/contract>:/build \
-    -e CARGO_CONTRACT_VERSION=2.0.2 \
+    -e CARGO_CONTRACT_VERSION=2.2.0 \
     -i ink-verifier:develop
 ```
 
 Environment variables supported (and their default values):
 ```
 BUILD_MODE=Release
-CARGO_CONTRACT_VERSION=2.0.2
+CARGO_CONTRACT_VERSION=2.2.0
 RUST_TOOLCHAIN=1.66.1-x86_64-unknown-linux-gnu
 KEEP_DEBUG_SYMBOLS=false
 OPTIMIZATION_PASSES=Z

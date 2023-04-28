@@ -8,14 +8,14 @@
 set -eu
 
 build_mode=${BUILD_MODE:-Release}
-cargo_contract_version=${CARGO_CONTRACT_VERSION:-2.0.2}
-rust_toolchain=${RUST_TOOLCHAIN:-1.66.1-x86_64-unknown-linux-gnu}
+cargo_contract_version=${CARGO_CONTRACT_VERSION:-2.2.0}
+rust_toolchain=${RUST_TOOLCHAIN:-1.69.0-x86_64-unknown-linux-gnu}
 keep_debug_symbols=${KEEP_DEBUG_SYMBOLS:-false}
 optimization_passes=${OPTIMIZATION_PASSES:-Z}
 
 if ! [[ $rust_toolchain =~ ^[0-9]+\.[0-9]+\.[0-9]+-x86_64-unknown-linux-gnu$ ]]; then
   echo >&2 "Version [$rust_toolchain] is not supported"
-  echo >&2 "Please specify a stable version e.g. 1.66.1-x86_64-unknown-linux-gnu"
+  echo >&2 "Please specify a stable version e.g. 1.69.0-x86_64-unknown-linux-gnu"
   exit 1
 fi
 
