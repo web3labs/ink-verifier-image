@@ -26,7 +26,7 @@ jobs:
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
-       docker build . --file Dockerfile --tag $IMAGE_NAME:$VERSION
+          docker build . --file Dockerfile --tag ink-verifier:alpha
     - name: Log in to registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
@@ -37,5 +37,5 @@ jobs:
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
-        docker tag ink-verifier ghcr.io/web3labs/ink-verifier:alpha        # docker push $IMAGE_ID:$VERSION
+        docker tag ink-verifier ghcr.io/web3labs/ink-verifier:alpha
         docker push ghcr.io/web3labs/ink-verifier:alpha
