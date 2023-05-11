@@ -37,5 +37,5 @@ jobs:
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
-        docker tag ink-verifier ghcr.io/web3labs/ink-verifier:alpha
+        docker tag ink-verifier:alpha ghcr.io/web3labs/ink-verifier:alpha
         docker push ghcr.io/web3labs/ink-verifier:alpha
