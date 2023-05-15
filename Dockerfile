@@ -1,21 +1,36 @@
-FROM rust:1.69
+FROM docker.io/bitnami/minideb:bullseye as slimmed-rust
+
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH \
+    RUST_VERSION=1.69.0
+
+# Minimal Rust dependencies.
+RUN set -eux \
+    && apt-get update && apt-get -y install wget g++ \
+    && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+        amd64) rustArch='x86_64-unknown-linux-gnu' ;; \
+        arm64) rustArch='aarch64-unknown-linux-gnu' ;; \
+        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+    esac \
+    && url="https://static.rust-lang.org/rustup/dist/${rustArch}/rustup-init" \
+    && wget "$url" \
+    && chmod +x rustup-init \
+    && ./rustup-init -y --no-modify-path --profile minimal --component rust-src rustfmt --default-toolchain $RUST_VERSION  \
+    && rm rustup-init \
+    && chmod -R a+w $RUSTUP_HOME $CARGO_HOME \
+    && rustup --version \
+    && cargo --version \
+    && rustc --version \
+    && apt-get remove -y --auto-remove wget \
+    && apt-get -y install gcc jq xxd zip file \
+    && rm -rf /var/lib/apt/lists/*
+
+################################################
+FROM slimmed-rust as ink-verifier-image
 
 WORKDIR /build
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && \
-    # Install dependencies
-    apt-get install -y clang lld libclang-dev jq xxd zip; \
-    # Print versions
-    rustup show; \
-    cargo --version; \
-    # Link clang
-    update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100; \
-    # Clean up
-    apt-get autoremove -y; \
-	apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
 
 # Configure linker by target
 COPY config/config.toml /root/.cargo/config

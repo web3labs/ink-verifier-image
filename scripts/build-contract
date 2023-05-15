@@ -13,12 +13,6 @@ rust_toolchain=${RUST_TOOLCHAIN:-1.69.0-x86_64-unknown-linux-gnu}
 keep_debug_symbols=${KEEP_DEBUG_SYMBOLS:-false}
 optimization_passes=${OPTIMIZATION_PASSES:-Z}
 
-if ! [[ $rust_toolchain =~ ^[0-9]+\.[0-9]+\.[0-9]+-x86_64-unknown-linux-gnu$ ]]; then
-  echo >&2 "Version [$rust_toolchain] is not supported"
-  echo >&2 "Please specify a stable version e.g. 1.69.0-x86_64-unknown-linux-gnu"
-  exit 1
-fi
-
 echo "Build Info
 
 - build_mode: ${build_mode}
@@ -36,6 +30,8 @@ ls -lah $SRC_ROOT
 rustup toolchain install "${rust_toolchain}"
 rustup target add wasm32-unknown-unknown --toolchain "${rust_toolchain}"
 rustup component add rust-src --toolchain "${rust_toolchain}"
+
+cargo contract --version || echo "cargo-contract not installed"
 
 # Install ink! cargo-contract tool
 echo "Executing cargo install --version 2.2.0 --force --locked cargo-contract"
