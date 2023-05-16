@@ -38,7 +38,6 @@ rustup target add wasm32-unknown-unknown --toolchain "${rust_toolchain}"
 rustup component add rust-src --toolchain "${rust_toolchain}"
 
 # Install ink! cargo-contract tool
-echo "Executing cargo install --version 2.2.0 --force --locked cargo-contract"
 cargo install --version "${cargo_contract_version}" --force --locked cargo-contract
 
 # 2. Build contract
