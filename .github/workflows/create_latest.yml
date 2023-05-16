@@ -1,5 +1,0 @@
-docker images
-docker pull ghcr.io/web3labs/ink-verifier:alpha
-docker tag ghcr.io/web3labs/ink-verifier:alpha ghcr.io/web3labs/ink-verifier:latest
-docker push ghcr.io/web3labs/ink-verifier:latest
-docker images

@@ -1,0 +1,27 @@
+name: Rename alpha to latest
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ink-verifier
+
+jobs:
+  build:
+    permissions:
+      packages: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Pull the alpha image
+      run: |
+          docker pull ghcr.io/web3labs/ink-verifier:alpha
+
+    - name: Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+    - name: Rename and Push image
+      run: |
+        docker tag ghcr.io/web3labs/ink-verifier:alpha ghcr.io/web3labs/ink-verifier:latest
+        docker push ghcr.io/web3labs/ink-verifier:latest
+        docker images
